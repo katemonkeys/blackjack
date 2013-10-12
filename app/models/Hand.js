@@ -23,6 +23,10 @@
       return this.add(this.deck.pop()).last();
     };
 
+    Hand.prototype.stand = function() {
+      return this.trigger('endTurn');
+    };
+
     Hand.prototype.scores = function() {
       var answers, hasAce, score;
       hasAce = this.reduce(function(memo, card) {
@@ -37,14 +41,37 @@
         answers = [score];
       }
       if (answers[0] === 21 || answers[1] === 21) {
+        this.trigger('endTurn');
         return answers = [21];
       } else if (answers[0] > 21) {
         this.trigger('endTurn');
-        return answers = ['bust'];
+        return answers = answers.splice(0, 1);
       } else if (answers[1] > 21) {
         return answers = answers.splice(0, 1);
       } else {
         return answers;
+      }
+    };
+
+    Hand.prototype.checkScores = function() {
+      var answers, hasAce, score;
+      hasAce = this.reduce(function(memo, card) {
+        return memo || card.get('value') === 1;
+      }, false);
+      score = this.reduce(function(score, card) {
+        return score + (card.get('revealed') ? card.get('value') : 0);
+      }, 0);
+      if (hasAce) {
+        answers = [score, score + 10];
+      } else {
+        answers = [score];
+      }
+      if (answers[0] === 21 || answers[1] === 21) {
+        return answers = 21;
+      } else if (answers[1] > 21) {
+        return answers = answers[0];
+      } else {
+        return answers[answers.length - 1];
       }
     };
 

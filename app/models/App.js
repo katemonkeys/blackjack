@@ -22,9 +22,31 @@
     };
 
     App.prototype.newTurn = function() {
-      console.log(this.get('dealerHand'));
-      this.get('dealerHand').models[0].set('revealed', true);
-      return alert('Dealer wins; you bust');
+      var dh, ph;
+      console.log('starting newTurn');
+      dh = this.get('dealerHand');
+      ph = this.get('playerHand');
+      dh.models[0].set('revealed', true);
+      console.log("player has " + ph.checkScores());
+      if (ph.checkScores() > 21) {
+        alert('you lose');
+      } else {
+        while (dh.checkScores() < 17) {
+          dh.hit();
+          console.log("dealer has " + dh.checkScores());
+        }
+        console.log("dealer has " + dh.checkScores());
+        if (dh.checkScores() > 21) {
+          alert('dealer busts (you win)');
+        } else if (dh.checkScores() > ph.checkScores()) {
+          alert('dealer wins');
+        } else if (dh.checkScores() === ph.checkScores()) {
+          alert('push');
+        } else {
+          alert('you win!');
+        }
+      }
+      return void 0;
     };
 
     return App;

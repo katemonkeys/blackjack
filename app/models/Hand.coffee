@@ -6,7 +6,7 @@ class window.Hand extends Backbone.Collection
 
   hit: -> @add(@deck.pop()).last()
 
-  # stand: -> @trigger('change')
+  stand: -> @trigger('endTurn')
 
   scores: ->
     # The scores are an array of potential scores.
@@ -20,11 +20,11 @@ class window.Hand extends Backbone.Collection
     , 0
     if hasAce then answers = [score, score + 10] else answers = [score]
     if answers[0] == 21 || answers[1] == 21
+      @trigger('endTurn')
       answers = [21]
     else if answers[0] > 21
-      # console.log("Answers[0]>21 ",@model)
       @trigger('endTurn')
-      answers = ['bust']
+      answers = answers.splice(0,1)
     else if answers[1] > 21
       answers = answers.splice(0,1)
     else answers
@@ -34,10 +34,18 @@ class window.Hand extends Backbone.Collection
     #   @$('.score').text @collection.scores()[0] + " or " + @collection.scores()[1]
     # else @$('.score').text @collection.scores()[0]
 
-
-
-# play: function(){
-#  this.trigger('play',this);
-# }
-
-#A hand can know its SCORE. 
+  checkScores: ->
+    hasAce = @reduce (memo, card) ->
+      memo or card.get('value') is 1
+    , false
+    score = @reduce (score, card) ->
+      score + if card.get 'revealed' then card.get 'value' else 0
+    , 0
+    if hasAce then answers = [score, score + 10] else answers = [score]
+    if answers[0] == 21 || answers[1] == 21
+      answers = 21
+    # else if answers[0] > 21
+      # answers = answers.splice(0,1)
+    else if answers[1] > 21
+      answers = answers[0]
+    else answers[answers.length-1]
