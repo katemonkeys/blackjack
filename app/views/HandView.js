@@ -21,6 +21,9 @@
       this.collection.on('add remove change', function() {
         return _this.render();
       });
+      this.collection.on('endTurn', function() {
+        return _this.render('flag');
+      });
       return this.render();
     };
 
@@ -33,11 +36,7 @@
         }).$el;
       }));
       if (arguments[0]) {
-        if (this.collection.scores()[1]) {
-          return this.$('.score').text(this.collection.scores()[1]);
-        } else {
-          return this.$('.score').text(this.collection.scores()[0]);
-        }
+        return this.$('.score').text(this.collection.checkScores());
       } else {
         if (this.collection.scores().length > 1) {
           return this.$('.score').text(this.collection.scores()[0] + " or " + this.collection.scores()[1]);
