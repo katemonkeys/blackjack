@@ -23,29 +23,32 @@
 
     App.prototype.newTurn = function() {
       var dh, ph;
-      console.log('starting newTurn');
       dh = this.get('dealerHand');
       ph = this.get('playerHand');
       dh.models[0].set('revealed', true);
-      console.log("player has " + ph.checkScores());
       if (ph.checkScores() > 21) {
-        alert('you lose');
+        alert('Dealer wins!');
       } else {
         while (dh.checkScores() < 17) {
           dh.hit();
-          console.log("dealer has " + dh.checkScores());
         }
-        console.log("dealer has " + dh.checkScores());
         if (dh.checkScores() > 21) {
-          alert('dealer busts (you win)');
+          alert('Dealer busts. You win!');
         } else if (dh.checkScores() > ph.checkScores()) {
-          alert('dealer wins');
+          alert('Dealer wins!');
         } else if (dh.checkScores() === ph.checkScores()) {
-          alert('push');
+          alert('Push.');
         } else {
-          alert('you win!');
+          alert('You win!');
         }
       }
+      return void 0;
+    };
+
+    App.prototype.newGame = function() {
+      this.set('playerHand', this.get('deck').dealPlayer());
+      this.set('dealerHand', this.get('deck').dealDealer());
+      this.get('playerHand').on('endTurn', this.newTurn, this);
       return void 0;
     };
 

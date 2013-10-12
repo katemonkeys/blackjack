@@ -11,11 +11,9 @@ class window.Card extends Backbone.Model
         when 11 then 'Jack'
         when 12 then 'Queen'
         else params.rank
+      imgSource: params.imgSource
+
 
   flip: ->
     @set 'revealed', !@get 'revealed'
     @
-
-# play: function(){
-#  this.trigger('play',this);
-# }

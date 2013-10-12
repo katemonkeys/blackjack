@@ -30,7 +30,8 @@
             default:
               return params.rank;
           }
-        })()
+        })(),
+        imgSource: params.imgSource
       });
     };
 

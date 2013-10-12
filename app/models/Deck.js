@@ -18,7 +18,8 @@
       return this.add(_(_.range(1, 53)).shuffle().map(function(card) {
         return new Card({
           rank: card % 13,
-          suit: Math.floor(card / 13)
+          suit: Math.floor(card / 13),
+          imgSource: 'styles/classic-cards/' + card + 't.png'
         });
       }));
     };
