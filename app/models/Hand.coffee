@@ -6,6 +6,8 @@ class window.Hand extends Backbone.Collection
 
   hit: -> @add(@deck.pop()).last()
 
+  # stand: -> @trigger('change')
+
   scores: ->
     # The scores are an array of potential scores.
     # Usually, that array contains one element. That is the only score.
@@ -16,4 +18,26 @@ class window.Hand extends Backbone.Collection
     score = @reduce (score, card) ->
       score + if card.get 'revealed' then card.get 'value' else 0
     , 0
-    if hasAce then [score, score + 10] else [score]
+    if hasAce then answers = [score, score + 10] else answers = [score]
+    if answers[0] == 21 || answers[1] == 21
+      answers = [21]
+    else if answers[0] > 21
+      # console.log("Answers[0]>21 ",@model)
+      @trigger('endTurn')
+      answers = ['bust']
+    else if answers[1] > 21
+      answers = answers.splice(0,1)
+    else answers
+
+    # if arguments[0] @$('.score')
+    # if @collection.scores().length > 1 && @collection.scores()[1] <= 21
+    #   @$('.score').text @collection.scores()[0] + " or " + @collection.scores()[1]
+    # else @$('.score').text @collection.scores()[0]
+
+
+
+# play: function(){
+#  this.trigger('play',this);
+# }
+
+#A hand can know its SCORE. 
