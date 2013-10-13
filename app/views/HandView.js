@@ -24,7 +24,7 @@
       this.collection.on('endTurn', function() {
         return _this.render('flag');
       });
-      return this.render();
+      return this.render('flag');
     };
 
     HandView.prototype.render = function() {
@@ -35,7 +35,9 @@
           model: card
         }).$el;
       }));
-      if (arguments[0]) {
+      if (arguments[0] && this.isDealer) {
+        return this.$('.score').text(this.collection.scores()[0]);
+      } else if (arguments[0]) {
         return this.$('.score').text(this.collection.checkScores());
       } else {
         if (this.collection.scores().length > 1) {

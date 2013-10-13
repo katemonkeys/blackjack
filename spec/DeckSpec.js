@@ -8,13 +8,31 @@
       deck = new Deck();
       return hand = deck.dealPlayer();
     });
-    return describe('hit', function() {
+    describe('hit', function() {
       return it("should give the last card from the deck", function() {
         expect(deck.length).toBe(50);
         expect(deck.last()).toEqual(hand.hit());
         expect(deck.length).toBe(49);
         expect(deck.last()).toEqual(hand.hit());
         return expect(deck.length).toBe(48);
+      });
+    });
+    describe('stand', function() {
+      it("should allow hit until stand", function() {
+        hand.hit();
+        return expect(deck.length).toBe(49);
+      });
+      return it("should not allow hit after stand", function() {
+        hand.stand();
+        hand.hit();
+        return expect(deck.length).toBe(50);
+      });
+    });
+    return describe('deal', function() {
+      return it("should deal one dealer card face down", function() {
+        var dealerHand;
+        dealerHand = deck.dealDealer();
+        return expect(dealerHand.at(0).get('revealed')).toBe(false);
       });
     });
   });

@@ -19,12 +19,19 @@
       this.isDealer = isDealer;
     };
 
+    Hand.prototype.playable = true;
+
     Hand.prototype.hit = function() {
-      return this.add(this.deck.pop()).last();
+      if (!this.playable) {
+
+      } else {
+        return this.add(this.deck.pop()).last();
+      }
     };
 
     Hand.prototype.stand = function() {
-      return this.trigger('endTurn');
+      this.trigger('endTurn');
+      return this.playable = false;
     };
 
     Hand.prototype.scores = function() {
@@ -61,7 +68,7 @@
       score = this.reduce(function(score, card) {
         return score + (card.get('revealed') ? card.get('value') : 0);
       }, 0);
-      if (hasAce) {
+      if (hasAce && !this.isDealer) {
         answers = [score, score + 10];
       } else {
         answers = [score];
